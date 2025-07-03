@@ -33,7 +33,7 @@ export default function ListaDeTarefas(){
 
             <ul>
                 {lista.map((item) =>
-                <li>{item}</li>
+                <li>{item} <input type="checkbox" name="" id="" /></li>
             )}
             </ul>
 
