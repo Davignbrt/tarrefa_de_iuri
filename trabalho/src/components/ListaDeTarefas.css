@@ -7,7 +7,7 @@ ul {
     margin: 50px;
 }
 
-ul li{
+ul li{  
     list-style: none;
     border: 2px solid #FFDAB9;
 }

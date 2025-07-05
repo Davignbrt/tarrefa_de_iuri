@@ -1,14 +1,12 @@
-
 import './App.css'
-import ListaDeTarefas from './componentes/ListaDeTarefas'
+import ListaDeTarefas from './components/ListaDeTarefas'
 
 function App() {
-  
-
   return (
-    <>
-    <ListaDeTarefas/>
-    </>
+    <div className="container">
+      <h1>Lista de Tarefas</h1>
+      <ListaDeTarefas />
+    </div>
   )
 }
 
