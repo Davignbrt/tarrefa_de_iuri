@@ -62,6 +62,32 @@ export default function ListaDeTarefas(){
         setLista(lista_tarefas_aux)
         setSituacoes(lista_status_aux)
     }
+    function moverItem(array, de, para) {
+        const copia = [...array];
+        const [itemMovido] = copia.splice(de, 1);
+        copia.splice(para, 0, itemMovido);
+        return copia;
+        }
+    
+    const moverParaCima = (index) => {
+        if (index === 0) return;
+
+        const novaLista = moverItem(lista, index, index - 1);
+        const novasSituacoes = moverItem(situacoes, index, index - 1);
+
+        setLista(novaLista);
+        setSituacoes(novasSituacoes);
+        };
+
+    const moverParaBaixo = (index) => {
+        if (index === lista.length - 1) return;
+
+        const novaLista = moverItem(lista, index, index + 1);
+        const novasSituacoes = moverItem(situacoes, index, index + 1);
+
+        setLista(novaLista);
+        setSituacoes(novasSituacoes);
+        };
 
     // Retorno do meu componente 
     return(
@@ -78,7 +104,11 @@ export default function ListaDeTarefas(){
             </form>
 
             {/* Aqui eu listo os itens da lista */}
-            
+            <div className='botoes'>
+                <button onClick={Ordenador}>Ordenar</button> {/* Chamo a função pra ordenar as tarefas */}
+                <button onClick={() => setLista([])}>Limpar tarefas</button> {/* Aqui eu limpo todas as tarefas */}
+            </div>
+            <br />
             <ul>
                 {/* Faço um mapeamento da lista de tarefas pegando o item e seu id */}
                 {lista.map((item, index) =>
@@ -88,6 +118,8 @@ export default function ListaDeTarefas(){
 
                     <button onClick={() => Deletar(index)}>🗑️</button>
                     <br />
+                    <button className='prioridade' onClick={() => moverParaBaixo(index)}>↓</button>
+                    <button className='prioridade' onClick={() => moverParaCima(index)}>↑</button>
                     
                     {/* Aqui é onde eu seleciono o status da tarefa  */}
                     <select
@@ -106,9 +138,6 @@ export default function ListaDeTarefas(){
                 </li>
             )}
             </ul>
-            <div className='botoes'>
-                <button onClick={Ordenador}>Ordenar</button> {/* Chamo a função pra ordenar as tarefas */}
-                <button onClick={() => setLista([])}>Limpar tarefas</button> {/* Aqui eu limpo todas as tarefas */}
-            </div>
+            
         </div>
     )}

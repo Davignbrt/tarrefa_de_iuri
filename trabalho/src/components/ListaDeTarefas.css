@@ -123,3 +123,7 @@ select {
 .botoes button:last-child:hover {
   background-color: #b52a37;
 }
+ .prioridade{
+  background-color: gray;
+  color: white;
+ }
