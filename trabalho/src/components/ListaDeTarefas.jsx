@@ -18,56 +18,46 @@ export default function ListaDeTarefas(){
         setSituacoes([...situacoes, situacao]) // Adiciono o status da tarefa aqui
     }
 
-    // Aqui eu defino a função que vai ficar responsável por ordenar as listas - Não peita > Feita
+    // Aqui eu defino a função que vai ficar responsável por ordenar as listas - Não feita > Feita
     function Ordenador() {
-        // Lista com todos os Ids das tarefas "Feitas"
+        // Lista com todos os Ids das tarefas "Não Feitas"
         const idtarefasNaoFeitas = 
-            // Aqui eu faço um mapeamento da minha lista pra criar uma lista de objetos com o valor + índice.
             situacoes.map((situacao, index) => ({ situacao, index }))
-            // Já aqui eu verifico os objetos que situacao === "Não Feita"
             .filter(item => item.situacao === "Não Feita")
-            // Dos objetos filtrados eu mapeio e pego apenas os ids deles
             .map(item => item.index);
 
-        // Mesmo processo de idtarefasNaoFeitas
         const idtarefasFeitas = 
             situacoes.map((situacao, index) => ({ situacao, index }))
             .filter(item => item.situacao === "Feita")
             .map(item => item.index);
 
-        // Aqui eu crio uma nova lista de como vão ficar organizados os ids
         const novaOrdem = [
             ...idtarefasNaoFeitas, 
             ...idtarefasFeitas
         ]
 
-        // OBS: Ambas as listas (lista e situacoes) tem o mesmo tamanho e cada id é correspondente entre elas
-        // Crio uma lista auxiliar pra organizar as tarefas com baso nos ids da lista novaOrdem
         const novaLista = novaOrdem.map(i => lista[i])
-        // Crio uma lista auxiliar pra organizar os status das tarefas com baso nos ids da lista novaOrdem
-        const novasSituacoes = novaOrdem.map(i =>situacoes[i])
+        const novasSituacoes = novaOrdem.map(i => situacoes[i])
 
-        // Atualizo os valores das listas
         setLista(novaLista)
         setSituacoes(novasSituacoes)
-        }
+    }
 
     // Função responsável por remover apenas um item
     function Deletar(id) {
-        //  Pego todos os item em uma lista auxiliar, execeto o que eu vou apagar, e em seguida atualizo a lista geral
         const lista_status_aux = situacoes.filter((item, id_item) => id_item !== id)
         const lista_tarefas_aux = lista.filter((item, id_item) => id_item !== id)
 
-        // Atualizo os valores
         setLista(lista_tarefas_aux)
         setSituacoes(lista_status_aux)
     }
+    
     function moverItem(array, de, para) {
         const copia = [...array];
         const [itemMovido] = copia.splice(de, 1);
         copia.splice(para, 0, itemMovido);
         return copia;
-        }
+    }
     
     const moverParaCima = (index) => {
         if (index === 0) return;
@@ -77,7 +67,7 @@ export default function ListaDeTarefas(){
 
         setLista(novaLista);
         setSituacoes(novasSituacoes);
-        };
+    };
 
     const moverParaBaixo = (index) => {
         if (index === lista.length - 1) return;
@@ -87,54 +77,65 @@ export default function ListaDeTarefas(){
 
         setLista(novaLista);
         setSituacoes(novasSituacoes);
-        };
+    };
+
+    function Limpar_Lista () {
+        setLista([])
+        setSituacoes([])
+    }
 
     // Retorno do meu componente 
     return(
         <div>
-            <h2>Lista de Tarefas React</h2>
 
             {/* Aqui é onde chama a função no evento onSubmit*/}
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className='form-container'>
                 <label>
-                    {/* O "e" significa evenet */}
-                    <input type="text" name="tarefa" value={tarefa} onChange={(e) => setTarefa(e.target.value)} /> 
+                    {/* O "e" significa event */}
+                    <input
+                        type="text"
+                        name="tarefa"
+                        value={tarefa}
+                        onChange={(e) => setTarefa(e.target.value)}
+                    />
                 </label>
-                    <input type="submit" value="Adicionar" />
+
+                {/* Agrupe todos os botões abaixo do input */}
+                <div className='botoes'>
+                    <input type="submit" value="Adicionar" className="adicionar" /> {/* Botão agora é verde */}
+                    <button className="btn-ordenar" onClick={Ordenador}>Ordenar</button> {/* Agora azul */}
+                    <button className="btn-limpar" onClick={Limpar_Lista}>Limpar tarefas</button>
+                </div>
             </form>
 
-            {/* Aqui eu listo os itens da lista */}
-            <div className='botoes'>
-                <button onClick={Ordenador}>Ordenar</button> {/* Chamo a função pra ordenar as tarefas */}
-                <button onClick={() => setLista([])}>Limpar tarefas</button> {/* Aqui eu limpo todas as tarefas */}
-            </div>
             <br />
             <ul>
                 {/* Faço um mapeamento da lista de tarefas pegando o item e seu id */}
                 {lista.map((item, index) =>
                 <li key={index}>
-
+                <div className="tarefa-texto">
                     {item} - {situacoes[index]} {/* Aqui eu mostro item(tarefa) e seu status (passando o seu respectivo id, só que na lista de situacões) */}
+                </div>  
+                    {/* Agrupo os botões e o select em uma linha */}
+                    <div className="controles-tarefa">
+                        <button className='lixeira' onClick={() => Deletar(index)}>🗑️</button>
+                        
+                        <button className='prioridade' onClick={() => moverParaBaixo(index)}>↓</button>
+                        <button className='prioridade' onClick={() => moverParaCima(index)}>↑</button>
 
-                    <button onClick={() => Deletar(index)}>🗑️</button>
-                    <br />
-                    <button className='prioridade' onClick={() => moverParaBaixo(index)}>↓</button>
-                    <button className='prioridade' onClick={() => moverParaCima(index)}>↑</button>
-                    
-                    {/* Aqui é onde eu seleciono o status da tarefa  */}
-                    <select
-                        value={situacoes[index]} // Pego o valor da mesma passando sua posição na lista de situações 
-                        name="opcao"
-                        // Aqui é a função onde eu mudo o status dela
-                        // Esse (e) => dentro da função é oque vai me permitir fazer ela
-                        onChange={(e) => {
-                            const novasSituacoes = [...situacoes]; // Crio uma lista auxiliar pra pegar todos os status
-                            novasSituacoes[index] = e.target.value; // Aqui eu digo que na posição que aquela tarefa se encontra eu vou mudar o valor dela pra oque foi selecionado, por meio do event (e.target.value)
-                            setSituacoes(novasSituacoes); // Atualizo a lista de situações
-                    }}>
-                        <option value="Não Feita">Não Feita</option>
-                        <option value="Feita">Feita</option>
-                    </select>
+                        {/* Aqui é onde eu seleciono o status da tarefa  */}
+                        <select
+                            value={situacoes[index]} 
+                            name="opcao"
+                            onChange={(e) => {
+                                const novasSituacoes = [...situacoes];
+                                novasSituacoes[index] = e.target.value;
+                                setSituacoes(novasSituacoes);
+                            }}>
+                            <option value="Não Feita">Não Feita</option>
+                            <option value="Feita">Feita</option>
+                        </select>
+                    </div>
                 </li>
             )}
             </ul>
