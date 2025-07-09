@@ -172,3 +172,9 @@ select {
   align-items: center;
 }
 
+/* Formatação da tarefa  */
+.descricao-tarefa {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0 0 8px 0;
+}
