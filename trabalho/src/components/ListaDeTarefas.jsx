@@ -52,6 +52,8 @@ export default function ListaDeTarefas(){
 
     // Função responsável por remover apenas um item
     function Deletar(id) {
+        const confirmar = window.confirm("Tem certeza que deseja excluir esta tarefa?");
+        if (!confirmar) return; // se cancelar, não faz nada
         // Aqui eu pego a lista e pego todos os item, menos o que eu não quero. Usando filter
         const lista_status_aux = situacoes.filter((item, id_item) => id_item !== id)
         const lista_tarefas_aux = lista.filter((item, id_item) => id_item !== id)
@@ -103,6 +105,8 @@ export default function ListaDeTarefas(){
 
     // Função responsável por limpar as listas
     function Limpar_Lista () {
+        const confirmar = window.confirm("Tem certeza que deseja excluir todas as tarefas?");
+        if (!confirmar) return; // se cancelar, não faz nada
         // Define as duas listas como vazias 
         setLista([])
         setSituacoes([])
